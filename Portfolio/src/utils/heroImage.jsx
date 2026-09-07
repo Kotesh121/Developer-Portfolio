@@ -7,5 +7,3 @@ export function resolveHeroImage(url) {
   if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) return trimmed;
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 }
-
-
