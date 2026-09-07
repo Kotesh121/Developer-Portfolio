@@ -9,7 +9,7 @@ import {
 import {
   // Web – Frontend
   SiHtml5,
-  SiCss3,
+  SiCss,
   SiJavascript,
   SiTypescript,
   SiReact,
@@ -35,7 +35,7 @@ import {
   SiRubyonrails,
   SiRust,
   SiGo,
-  SiJava,
+  SiOpenjdk,
   SiCplusplus,
   SiC,
   SiDotnet,
@@ -61,9 +61,7 @@ import {
   // DevOps / Cloud / Tools
   SiDocker,
   SiKubernetes,
-  SiAmazonwebservices,
   SiGooglecloud,
-  SiMicrosoftazure,
   SiVercel,
   SiNetlify,
   SiNginx,
@@ -88,7 +86,7 @@ import {
   SiWordpress,
 } from "react-icons/si";
 import { VscVscode } from "react-icons/vsc";
-import { FaDatabase, FaBrain, FaRobot, FaMicrochip, FaEnvelope, FaCode, FaLaptopCode } from "react-icons/fa";
+import { FaDatabase, FaBrain, FaRobot, FaMicrochip, FaEnvelope, FaCode, FaLaptopCode, FaAws, FaMicrosoft } from "react-icons/fa";
 
 function getSkillIcon(name) {
   const n = name.toLowerCase().trim();
@@ -96,7 +94,7 @@ function getSkillIcon(name) {
   // ── HTML / CSS ────────────────────────────────────────────────
   if (n.includes("html")) return <SiHtml5 className="text-[#E34F26]" />;
   if (n.includes("sass") || n.includes("scss")) return <SiSass className="text-[#CC6699]" />;
-  if (n.includes("css")) return <SiCss3 className="text-[#1572B6]" />;
+  if (n.includes("css")) return <SiCss className="text-[#1572B6]" />;
 
   // ── JavaScript / TypeScript ───────────────────────────────────
   if (n.includes("typescript") || n === "ts") return <SiTypescript className="text-[#3178C6]" />;
@@ -132,7 +130,7 @@ function getSkillIcon(name) {
   // ── Systems / General-Purpose Languages ───────────────────────
   if (n.includes("c++") || n.includes("cpp")) return <SiCplusplus className="text-[#00599C]" />;
   if (n === "c" || n.includes("c language")) return <SiC className="text-[#A8B9CC]" />;
-  if (n.includes("java") && !n.includes("javascript")) return <SiJava className="text-[#007396]" />;
+  if (n.includes("java") && !n.includes("javascript")) return <SiOpenjdk className="text-[#007396]" />;
   if (n.includes("dart")) return <SiDart className="text-[#0175C2]" />;
 
   // ── Databases ─────────────────────────────────────────────────
@@ -163,9 +161,9 @@ function getSkillIcon(name) {
   // ── DevOps / Cloud ────────────────────────────────────────────
   if (n.includes("docker")) return <SiDocker className="text-[#2496ED]" />;
   if (n.includes("kubernetes") || n === "k8s") return <SiKubernetes className="text-[#326CE5]" />;
-  if (n.includes("aws") || n.includes("amazon web services")) return <SiAmazonwebservices className="text-[#FF9900]" />;
+  if (n.includes("aws") || n.includes("amazon web services")) return <FaAws className="text-[#FF9900]" />;
   if (n.includes("gcp") || n.includes("google cloud")) return <SiGooglecloud className="text-[#4285F4]" />;
-  if (n.includes("azure") || n.includes("microsoft azure")) return <SiMicrosoftazure className="text-[#0078D4]" />;
+  if (n.includes("azure") || n.includes("microsoft azure")) return <FaMicrosoft className="text-[#0078D4]" />;
   if (n.includes("vercel")) return <SiVercel className="text-white" />;
   if (n.includes("netlify")) return <SiNetlify className="text-[#00C7B7]" />;
   if (n.includes("nginx")) return <SiNginx className="text-[#009639]" />;
