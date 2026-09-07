@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchPortfolio, savePortfolio } from "../api/client";
-import { normalizePortfolio } from "../data/staticPortfolio";
+import { normalizePortfolio } from "../../data/staticPortfolio";
 
 const FEEDBACK_MS = 2800;
 
