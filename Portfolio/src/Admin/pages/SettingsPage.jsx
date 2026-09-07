@@ -422,10 +422,10 @@ export default function SettingsPage() {
                     Link URL (href)
                   </label>
                   <input
-                    type="url"
+                    type="text"
                     className={adminInputClass}
                     value={item.href}
-                    placeholder="https://"
+                    placeholder="https:// or mailto:"
                     onChange={(e) => updateSocialLink(idx, { href: e.target.value })}
                     required
                   />
