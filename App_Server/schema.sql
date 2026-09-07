@@ -74,6 +74,27 @@ CREATE TABLE IF NOT EXISTS blogs (
 );
 
 -- 7. Messages Table (Contact Form Inbox)
+-- 7. Certifications Table
+CREATE TABLE IF NOT EXISTS certifications (
+    id VARCHAR(100) PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    issuer VARCHAR(150) DEFAULT NULL,
+    credential_id VARCHAR(150) DEFAULT NULL,
+    issued_date VARCHAR(20) DEFAULT NULL,
+    expiration_date VARCHAR(20) DEFAULT NULL,
+    credential_url VARCHAR(500) DEFAULT NULL,
+    image_url VARCHAR(500) DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    skills JSON DEFAULT NULL,
+    display_order INT NOT NULL DEFAULT 0,
+    archived BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_certifications_display_order (display_order),
+    INDEX idx_certifications_archived (archived)
+);
+
+-- 8. Messages Table (Contact Form Inbox)
 CREATE TABLE IF NOT EXISTS messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -84,7 +105,7 @@ CREATE TABLE IF NOT EXISTS messages (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 8. Analytics Table
+-- 9. Analytics Table
 CREATE TABLE IF NOT EXISTS analytics (
     id INT AUTO_INCREMENT PRIMARY KEY,
     visitor_id VARCHAR(100) NOT NULL,
