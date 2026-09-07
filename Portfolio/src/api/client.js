@@ -1,6 +1,10 @@
 const rawBase = import.meta.env.VITE_API_URL ?? "";
 const API_BASE = rawBase.endsWith("/") ? rawBase.slice(0, -1) : rawBase;
 
+
+// --- Auth helpers ---
+// No more sessionStorage — the browser automatically manages the HttpOnly cookie.
+
 async function request(path, options = {}) {
   const token = localStorage.getItem("admin_token");
   const headers = { 
@@ -14,7 +18,7 @@ async function request(path, options = {}) {
     res = await fetch(`${API_BASE}${path}`, {
       ...options,
       headers,
-      credentials: "include",
+      credentials: "include", // Send cookie if supported
     });
   } catch {
     throw new Error("Cannot reach portfolio API. Start the server: uvicorn App:app --port 8000");
@@ -41,6 +45,7 @@ export async function savePortfolio(portfolio) {
   });
 }
 
+/** Upload profile photo; saves to public/ and updates hero.image in portfolio.json */
 export async function uploadHeroPortrait(dataUrl) {
   return request("/api/upload/hero-portrait", {
     method: "POST",
@@ -55,6 +60,14 @@ export async function uploadProjectImage(dataUrl, projectId) {
   });
 }
 
+export async function uploadCertificationImage(dataUrl, certId) {
+  return request("/api/upload/certification-image", {
+    method: "POST",
+    body: JSON.stringify({ dataUrl, certId }),
+  });
+}
+
+/** Upload resume PDF; saves to public/ and updates site.resumeUrl in portfolio.json */
 export async function uploadResume(dataUrl, filename) {
   return request("/api/upload/resume", {
     method: "POST",
@@ -62,6 +75,7 @@ export async function uploadResume(dataUrl, filename) {
   });
 }
 
+/** Login — saves token and sets cookie for dual cross-origin authentication */
 export async function loginAdmin(email, password) {
   let deviceId = localStorage.getItem("admin_device_id");
   if (!deviceId) {
@@ -83,14 +97,20 @@ export async function loginAdmin(email, password) {
   return data;
 }
 
+/**
+ * Check if the session is still valid.
+ * Returns { ok: true } on success, throws on 401.
+ */
 export async function checkAdminSession() {
   return request("/api/auth/me");
 }
 
+/** Logout — clears token and cookie */
 export async function logoutAdmin() {
   localStorage.removeItem("admin_token");
   return request("/api/auth/logout", { method: "POST" });
 }
+
 
 export async function submitContact(form) {
   return request("/api/contact", {
@@ -139,3 +159,4 @@ export async function updateAdminEmail(currentPassword, newEmail) {
     body: JSON.stringify({ currentPassword, newEmail }),
   });
 }
+
