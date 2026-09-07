@@ -8,6 +8,7 @@ const links = [
   { to: "/admin/skills", label: "Skills" },
   { to: "/admin/projects", label: "Projects" },
   { to: "/admin/experience", label: "Experience" },
+  { to: "/admin/certifications", label: "Certifications" },
   { to: "/admin/blogs", label: "Blogs" },
   { to: "/admin/messages", label: "Messages" },
   { to: "/admin/settings", label: "Settings" },
