@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { HiSun, HiMoon } from "react-icons/hi2";
 import { usePortfolio } from "../context/PortfolioContext";
 import { useTheme } from "../hooks/useTheme";
@@ -22,11 +23,16 @@ function BrandDomain({ domain }) {
 export default function Navbar() {
   const { portfolio } = usePortfolio();
   const { site } = portfolio;
-  const navLinks = portfolio.navLinks ?? [];
+  const rawLinks = portfolio.navLinks ?? [];
+  const navLinks = rawLinks.some((l) => l.id === "home")
+    ? rawLinks
+    : [{ id: "home", label: "Home" }, ...rawLinks];
   const { dark, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeId, setActiveId] = useState("about");
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -35,6 +41,15 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    if (location.pathname === "/projects") {
+      setActiveId("projects");
+      return;
+    }
+    if (location.pathname === "/certifications") {
+      setActiveId("certifications");
+      return;
+    }
+
     const ids = ["home", ...navLinks.map((l) => l.id)];
     const observer = new IntersectionObserver(
       (entries) => {
@@ -50,10 +65,23 @@ export default function Navbar() {
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [navLinks]);
+  }, [navLinks, location.pathname]);
 
   const scrollTo = (id) => {
     setMenuOpen(false);
+    if (location.pathname !== "/") {
+      if (id === "home") {
+        navigate("/");
+      } else if (id === "projects") {
+        navigate("/projects");
+      } else if (id === "certifications") {
+        navigate("/certifications");
+      } else {
+        navigate(`/#${id}`);
+      }
+      return;
+    }
+
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -61,7 +89,7 @@ export default function Navbar() {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 md:px-6 pt-3 sm:pt-4 md:pt-5 pointer-events-none">
         <nav
-          className={`pointer-events-auto w-full max-w-5xl flex items-center justify-between gap-2 sm:gap-3 rounded-full border px-2 py-2 sm:px-3 sm:py-2.5 transition-colors duration-200 backdrop-blur-md ${
+          className={`pointer-events-auto w-[92%] sm:w-[88%] max-w-[1450px] flex items-center justify-between gap-3 sm:gap-4 rounded-full border px-3 py-2 sm:px-5 sm:py-2.5 transition-colors duration-200 backdrop-blur-md ${
             dark
               ? scrolled
                 ? "border-white/12 bg-[linear-gradient(135deg,rgba(12,18,35,0.95)_0%,rgba(28,18,48,0.95)_50%,rgba(12,22,40,0.95)_100%)] shadow-[0_8px_32px_rgba(0,0,0,0.45)]"
@@ -76,7 +104,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => scrollTo("home")}
-            className="flex items-center gap-2.5 sm:gap-3 shrink-0 pl-1 sm:pl-2"
+            className="flex items-center gap-2.5 sm:gap-3 shrink-0 pl-1 sm:pl-2 cursor-pointer"
           >
             <span
               className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full font-display font-bold text-sm text-slate-950 shadow-inner"
@@ -92,13 +120,13 @@ export default function Navbar() {
           </button>
 
           {/* Desktop links */}
-          <ul className="hidden lg:flex items-center gap-1 xl:gap-2 flex-1 justify-center">
+          <ul className="hidden lg:flex items-center gap-1.5 xl:gap-3 2xl:gap-4 flex-1 justify-center">
             {navLinks.map(({ id, label }) => (
               <li key={id}>
                 <button
                   type="button"
                   onClick={() => scrollTo(id)}
-                  className={`px-3 xl:px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  className={`px-3.5 xl:px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${
                     activeId === id
                       ? dark
                         ? "text-white bg-white/10"
@@ -115,7 +143,7 @@ export default function Navbar() {
           </ul>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 sm:gap-2.5 pr-1 sm:pr-2">
+          <div className="flex items-center gap-2.5 sm:gap-3 pr-1 sm:pr-2">
             <button
               type="button"
               onClick={toggle}
