@@ -1,4 +1,4 @@
-import { HERO_PORTRAIT_URL } from "../data/portfolio.js";
+import { HERO_PORTRAIT_URL } from "../../data/portfolio.js";
 
 /** Normalize hero image paths for the public site */
 export function resolveHeroImage(url) {
