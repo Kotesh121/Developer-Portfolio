@@ -2,13 +2,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { usePortfolio } from "../context/PortfolioContext";
 
+let hasShownIntro = false;
+
 export default function LoadingScreen() {
   const { portfolio } = usePortfolio();
   const site = portfolio.site ?? { initials: "SJ" };
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState(() => hasShownIntro);
 
   useEffect(() => {
-    const t = setTimeout(() => setDone(true), 1500);
+    if (hasShownIntro) return;
+    const t = setTimeout(() => {
+      hasShownIntro = true;
+      setDone(true);
+    }, 1500);
     return () => clearTimeout(t);
   }, []);
 
