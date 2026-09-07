@@ -63,6 +63,23 @@ class Blog(Base):
     archived = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())
 
+class Certification(Base):
+    __tablename__ = "certifications"
+    id = Column(String(100), primary_key=True, index=True)  # cert-xxxxx format
+    title = Column(String(200), nullable=False)
+    issuer = Column(String(150))
+    credential_id = Column(String(150))
+    issued_date = Column(String(20))
+    expiration_date = Column(String(20))
+    credential_url = Column(String(500))
+    image_url = Column(String(500))
+    description = Column(Text)
+    skills = Column(JSON)
+    display_order = Column(Integer, default=0, nullable=False)
+    archived = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
 class Message(Base):
     __tablename__ = "messages"
     id = Column(String(100), primary_key=True, index=True)  # msg-xxxxx format
