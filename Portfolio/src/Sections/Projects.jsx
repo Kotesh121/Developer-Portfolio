@@ -1,281 +1,192 @@
-/**
- * Portfolio content — edit this file to update the site.
- */
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { usePortfolio } from "../context/PortfolioContext";
+import GlassCard from "../Components/GlassCard";
+import GradientTitle from "../Components/GradientTitle";
+import { getProjectCategoryFilters } from "../utils/projectFilters";
+import { FaGithub } from "react-icons/fa";
+import { HiArrowUpRight } from "react-icons/hi2";
+import ProxyErrorSymbol from "../Components/ProxyErrorSymbol";
 
-/** Optional photo: place `hero-portrait.jpg` in the `public/` folder */
-export const HERO_PORTRAIT_URL = "/hero-portrait.jpg";
+/* ─── Compact visual card ─────────────────────────────────────────────────── */
+function GridCard({ project }) {
+  return (
+    <GlassCard className="flex flex-col justify-between h-full overflow-hidden rounded-2xl group hover:border-cyan-500/30 hover:-translate-y-0.5 transition-all duration-300">
+      {/* Small image visual banner */}
+      <div className="relative h-32 sm:h-36 w-full overflow-hidden bg-slate-900/50 border-b border-white/5">
+        {project.image ? (
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950/20">
+            <span className="font-display font-black text-2xl tracking-widest text-white/10 uppercase select-none">
+              {project.title?.slice(0, 2) || "PR"}
+            </span>
+          </div>
+        )}
+      </div>
 
-export const site = {
-  name: "Shubham Jani",
-  title: "Full Stack Developer",
-  initials: "SJ",
-  domain: "shubham.dev",
-  location: "Ahmedabad, India",
-  email: "shubhamjani1731@gmail.com",
-  resumeUrl: "/Shubham Jani Resume.pdf",
-  availability: "Open for internships, freelance & collaborations",
-};
+      <div className="p-5 flex flex-col justify-between flex-1">
+        <div>
+          <h3 className="font-display text-lg font-bold text-foreground tracking-tight group-hover:text-cyan-300 transition-colors duration-300">
+            {project.title}
+          </h3>
+          <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground truncate leading-relaxed">
+            {project.description}
+          </p>
+        </div>
 
-export const hero = {
-  availabilityBadge: "AVAILABLE FOR NEW WORK",
-  firstName: "Shubham",
-  lastName: "Jani.",
-  roles: ["Python & Flask Engineer", "Full Stack Developer", "FastAPI & SvelteKit Builder"],
-  bio:
-    "M.Sc. Computer Applications & IT at Gujarat University. I build real-world products with Python, Flask, FastAPI, and SvelteKit — from construction platforms to voice AI assistants.",
-  techTag: "Python • Flask • FastAPI",
-  shippedLabel: "shipped 4+",
-  statusLabel: "STATUS",
-  statusText: "Currently building real-world products",
-  serverStatus: "Spinning up Servers",
-  image: HERO_PORTRAIT_URL,
-  imageAlt: "Shubham Jani portrait",
-};
+        {(project.liveUrl || project.repoUrl) && (
+          <div className="mt-4 pt-3.5 border-t border-white/5 flex items-center justify-between gap-4">
+            {project.repoUrl ? (
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs font-mono-display tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <FaGithub className="text-sm" /> CODE
+              </a>
+            ) : (
+              <span />
+            )}
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-xs font-mono-display tracking-wider text-cyan-300 hover:text-cyan-200 transition-colors ml-auto"
+              >
+                LIVE DEMO <HiArrowUpRight className="text-sm" />
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </GlassCard>
+  );
+}
 
-export const statement = {
-  title: { before: "A student builder with a ", highlight: "product mind.", after: "" },
-  subtitle:
-    "I love turning real-world problems into elegant, usable software — one focused project at a time.",
-};
+/* ─── Section ─────────────────────────────────────────────────────────────── */
+export default function Projects({ featuredOnly = false }) {
+  const { portfolio, fromApi } = usePortfolio();
+  const projectsSection = portfolio.projectsSection ?? {
+    eyebrow: "SELECTED WORK",
+    title: { before: "Projects I'm ", highlight: "proud", after: " of." },
+    subtitle: "A small selection of recent products — each one shipped with obsessive care.",
+  };
+  const projects = portfolio.projects ?? [];
+  const [selectedFilter, setSelectedFilter] = useState("ALL");
 
-export const mission = {
-  eyebrow: "MISSION",
-  title: {
-    before: "I build digital products that feel ",
-    highlight: "obvious to use",
-    after: " — fast, practical, and rooted in solving genuine problems.",
-  },
-  body:
-    "Computer Applications student at Gujarat University. I ship full-stack apps with Python, Flask, FastAPI, and SvelteKit — including BuildTrack (construction management) and Sarthi (voice AI assistant).",
-  tags: [
-    "FULL STACK",
-    "PYTHON / FLASK",
-    "FASTAPI",
-    "SVELTEKIT",
-    "SQL / SQLITE",
-    "OPENCV / AI",
-  ],
-};
+  const filters = getProjectCategoryFilters(projects);
 
-export const stats = [
-  { value: "4+", label: "PROJECTS SHIPPED", color: "#7dd3fc" },
-  { value: "12+", label: "TECH STACKS MASTERED", color: "#60a5fa" },
-  { value: "850+", label: "GITHUB COMMITS", color: "#22d3ee" },
-  { value: "2,000+", label: "COFFEE/CODE HOURS", color: "#c4b5fd" },
-];
+  const allFiltered =
+    selectedFilter === "ALL"
+      ? projects
+      : projects.filter(
+          (p) =>
+            (p.category ?? "").trim().toUpperCase() === selectedFilter.toUpperCase()
+        );
 
-export const social = [
-  { label: "GitHub", href: "https://github.com/shubham-Jani17", icon: "github" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/shubhamjani", icon: "linkedin" },
-  { label: "Email", href: "mailto:shubhamjani1731@gmail.com", icon: "mail" },
-];
+  const displayedProjects = featuredOnly ? allFiltered.slice(0, 3) : allFiltered;
 
-export const contactSection = {
-  eyebrow: "GET IN TOUCH",
-  title: { before: "Let's build ", highlight: "something", after: " great." },
-  subtitle:
-    "Whether you have a brief, an idea, or just want to chat about craft — my inbox is open.",
-  statusBadge: "OPEN FOR INTERNSHIPS, FREELANCE & COLLABORATIONS",
-  infoTitle: "Reply within 24 hours.",
-  infoBody:
-    "I'm currently looking for full-stack internships, freelance projects and meaningful collaborations — especially around Python, FastAPI and applied AI.",
-  responseTime: "avg. response time • ~6 hours",
-  placeholders: {
-    name: "Jane Doe",
-    email: "jane@company.com",
-    message: "Tell me about your project, timelines, and what success looks like…",
-  },
-};
+  return (
+    <section id="projects" className="page-container section-pad relative">
+      <motion.header
+        className="mb-10 sm:mb-14 md:mb-20 text-center md:text-left"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        <p className="font-mono-display text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.35em] uppercase text-muted-foreground mb-3 sm:mb-4">
+          {projectsSection.eyebrow}
+        </p>
+        <h2 className="font-display text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.12] sm:leading-[1.1] max-w-3xl mx-auto md:mx-0 text-balance">
+          <GradientTitle parts={projectsSection.title} />
+        </h2>
+        <p className="mt-4 text-muted-foreground text-base md:text-lg max-w-2xl mx-auto md:mx-0">
+          {projectsSection.subtitle}
+        </p>
+      </motion.header>
 
-export const footer = {
-  tagline:
-    "Engineered, designed and shipped with obsessive attention to detail. Built with React, Tailwind and Framer Motion.",
-  navigate: [
-    [
-      { id: "about", label: "About" },
-      { id: "projects", label: "Projects" },
-      { id: "blog", label: "Blog" },
-    ],
-    [
-      { id: "skills", label: "Skills" },
-      { id: "experience", label: "Experience" },
-      { id: "contact", label: "Contact" },
-    ],
-  ],
-  designedIn: "Designed in Figma",
-  shippedFrom: "Ahmedabad",
-};
+      {!fromApi ? (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <GlassCard className="flex flex-col items-center justify-center text-center p-10 py-16 border border-dashed border-white/10 hover:border-cyan-500/20 transition-all duration-300">
+            <ProxyErrorSymbol />
+            <h3 className="font-display text-2xl font-bold text-foreground">No items found!</h3>
+            <p className="mt-3 text-sm text-muted-foreground max-w-md">
+              Backend database is unreachable due to a proxy error.
+            </p>
+          </GlassCard>
+        </motion.div>
+      ) : (
+        <>
+          {/* Filter tabs */}
+          {filters.length > 1 && (
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-10 md:mb-12">
+              {filters.map((filter) => {
+                const isActive = selectedFilter.toUpperCase() === filter.toUpperCase();
+                return (
+                  <button
+                    key={filter}
+                    type="button"
+                    onClick={() => setSelectedFilter(filter)}
+                    className={`px-4 py-2 text-xs font-mono-display tracking-wider rounded-full border transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.15)]"
+                        : "bg-white/[0.02] border-white/10 text-muted-foreground hover:text-foreground hover:bg-white/[0.05]"
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
-export const navLinks = [
-  { id: "about", label: "About" },
-  { id: "skills", label: "Skills" },
-  { id: "projects", label: "Projects" },
-  { id: "experience", label: "Experience" },
-  { id: "blog", label: "Blog" },
-  { id: "contact", label: "Contact" },
-];
+          {/* ── Responsive compact card grid ── */}
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="popLayout">
+              {displayedProjects.map((project, index) => (
+                <motion.div
+                  key={project.id || project.title}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.35, delay: index * 0.05 }}
+                  className="h-full"
+                >
+                  <GridCard project={project} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
 
-export const skillsSection = {
-  eyebrow: "SKILLS",
-  title: { before: "Tools I bend to ", highlight: "my", after: " will." },
-  subtitle: "A focused stack chosen for performance, longevity and developer happiness.",
-  orbit: [
-    "JavaScript",
-    "SvelteKit",
-    "Bootstrap",
-    "SQLite",
-    "Git",
-    "FastAPI",
-    "Flask",
-    "OpenCV",
-    "Python",
-    "MySQL",
-    "Tailwind",
-    "SQLAlchemy",
-  ],
-  categories: [
-    {
-      name: "Frontend",
-      items: [
-        { name: "HTML & CSS" },
-        { name: "JavaScript" },
-        { name: "Bootstrap" },
-        { name: "Tailwind" },
-        { name: "SvelteKit" },
-      ],
-    },
-    {
-      name: "Backend & Data",
-      items: [
-        { name: "Python" },
-        { name: "Flask" },
-        { name: "FastAPI" },
-        { name: "SQL / MySQL" },
-        { name: "SQLAlchemy" },
-      ],
-    },
-    {
-      name: "AI & IoT",
-      items: [
-        { name: "OpenCV" },
-        { name: "Face Recognition" },
-        { name: "NLP / Voice AI" },
-        { name: "IoT Prototyping" },
-        { name: "Computer Vision" },
-      ],
-    },
-    {
-      name: "Tools & Concepts",
-      items: [
-        { name: "Git & GitHub" },
-        { name: "VS Code" },
-        { name: "SQLite" },
-        { name: "EmailJS / FormSubmit" },
-        { name: "DBMS / OOP" },
-      ],
-    },
-  ],
-};
-
-export const projectsSection = {
-  eyebrow: "SELECTED WORK",
-  title: { before: "Projects I'm ", highlight: "proud", after: " of." },
-  subtitle: "A small selection of recent products — each one shipped with obsessive care.",
-};
-
-export const projects = [
-  {
-    title: "BuildTrack",
-    category: "FULL STACK",
-    description:
-      "Construction management platform for tracking sites, materials, and teams — built with Flask and SQLite for real deployment.",
-    image: "",
-    tags: ["FLASK", "PYTHON", "SQLITE"],
-    liveUrl: "",
-    repoUrl: "https://github.com/yourusername/buildtrack",
-  },
-  {
-    title: "Sarthi Voice Assistant AI",
-    category: "AI",
-    description:
-      "Voice-first assistant with NLP pipeline, FastAPI backend, and SvelteKit UI for hands-free task flows.",
-    image: "",
-    tags: ["SVELTEKIT", "FASTAPI", "PYTHON", "NLP"],
-    liveUrl: "https://example.com",
-    repoUrl: "https://github.com/yourusername/sarthi",
-  },
-  {
-    title: "IoT Smart Monitor",
-    category: "IOT",
-    description: "Sensor dashboard with real-time readings, alerts, and lightweight edge integration.",
-    image: "",
-    tags: ["PYTHON", "IOT", "FLASK"],
-    liveUrl: "",
-    repoUrl: "https://github.com/yourusername/iot-monitor",
-  },
-];
-
-export const experienceSection = {
-  eyebrow: "MY JOURNEY",
-  title: {
-    before: "A timeline of ",
-    craft: "craft",
-    mid: " & ",
-    growth: "growth",
-    after: ".",
-  },
-  subtitle:
-    "Education, projects, and hands-on building — each chapter shaping how I design and ship software.",
-};
-
-export const experience = [
-  {
-    period: "2025 — 2027",
-    title: "M.Sc. (CA & IT)",
-    subtitle: "K. S. School of Business Management & IT",
-    description:
-      "Postgraduate focus on advanced computing, databases, and applied software engineering with research-oriented projects.",
-    tech: ["FULL STACK", "AI", "DBMS"],
-  },
-  {
-    period: "2023 — 2025",
-    title: "Student Builder · Freelance",
-    subtitle: "Independent / Client work",
-    description:
-      "Shipped portfolio and client apps with Python, Flask, FastAPI, and SvelteKit — from APIs to polished UIs.",
-    tech: ["PYTHON", "FLASK", "SVELTEKIT"],
-  },
-  {
-    period: "2021 — 2023",
-    title: "B.Sc. Computer Applications",
-    subtitle: "Gujarat University",
-    description:
-      "Built foundations in programming, OOP, web fundamentals, and capstone demos with measurable outcomes.",
-    tech: ["OOP", "SQL", "WEB"],
-  },
-  {
-    period: "2020 — Present",
-    title: "Projects & Open Source",
-    subtitle: "Self-directed learning",
-    description:
-      "BuildTrack, Sarthi Voice AI, and IoT experiments — learning by shipping real-world products end to end.",
-    tech: ["FASTAPI", "OPENCV", "IOT"],
-  },
-];
-
-export const sections = {
-  blogs: true,
-};
-
-export const blogs = [
-  {
-    title: "Building BuildTrack from scratch",
-    excerpt: "Lessons from shipping a Flask app for construction teams.",
-    url: "https://medium.com/@you/post",
-    date: "2025-01-15",
-  },
-];
-
-
-
-
+          {/* ── Multipage CTA Button ── */}
+          <div className="mt-12 flex justify-center">
+            <Link
+              to="/projects"
+              className="group inline-flex items-center gap-3 px-6 py-3.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 font-mono-display text-xs tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(34,211,238,0.1)] hover:shadow-[0_0_25px_rgba(34,211,238,0.25)] hover:scale-105"
+            >
+              <span>EXPLORE ALL PROJECTS</span>
+              <span className="px-2 py-0.5 rounded-full bg-cyan-400/20 text-[10px] text-cyan-200">
+                {projects.length}
+              </span>
+              <HiArrowUpRight className="text-sm group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
