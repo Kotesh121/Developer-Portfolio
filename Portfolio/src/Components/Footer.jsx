@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import { usePortfolio } from "../context/PortfolioContext";
 import {
   FaGithub,
@@ -39,8 +40,22 @@ export default function Footer() {
   const { portfolio } = usePortfolio();
   const { site, social } = portfolio;
   const footer = portfolio.footer ?? { tagline: "", navigate: [], designedIn: "", shippedFrom: "" };
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const scrollTo = (id) => {
+    if (location.pathname !== "/") {
+      if (id === "home") {
+        navigate("/");
+      } else if (id === "projects") {
+        navigate("/projects");
+      } else if (id === "certifications") {
+        navigate("/certifications");
+      } else {
+        navigate(`/#${id}`);
+      }
+      return;
+    }
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
