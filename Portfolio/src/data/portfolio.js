@@ -93,6 +93,7 @@ export const footer = {
     [
       { id: "about", label: "About" },
       { id: "projects", label: "Projects" },
+      { id: "certifications", label: "Certifications" },
       { id: "blog", label: "Blog" },
     ],
     [
@@ -106,10 +107,12 @@ export const footer = {
 };
 
 export const navLinks = [
+  { id: "home", label: "Home" },
   { id: "about", label: "About" },
   { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
   { id: "experience", label: "Experience" },
+  { id: "certifications", label: "Certifications" },
   { id: "blog", label: "Blog" },
   { id: "contact", label: "Contact" },
 ];
@@ -263,8 +266,19 @@ export const experience = [
 ];
 
 export const sections = {
+  certifications: true,
   blogs: true,
 };
+
+export const certifications = [
+  {
+    title: "Python for Everybody",
+    issuer: "Coursera",
+    date: "2024",
+    url: "",
+    image: "",
+  },
+];
 
 export const blogs = [
   {
