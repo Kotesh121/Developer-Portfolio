@@ -3,7 +3,10 @@ import { usePortfolio } from "../context/PortfolioContext";
 
 export default function OverlayMenu({ open, onClose, onNavigate }) {
   const { portfolio } = usePortfolio();
-  const navLinks = portfolio.navLinks ?? [];
+  const rawLinks = portfolio.navLinks ?? [];
+  const navLinks = rawLinks.some((l) => l.id === "home")
+    ? rawLinks
+    : [{ id: "home", label: "Home" }, ...rawLinks];
 
   return (
     <AnimatePresence>
