@@ -9,6 +9,7 @@ import AboutPage from "./Admin/pages/AboutPage";
 import BlogsPage from "./Admin/pages/BlogsPage";
 import DashboardPage from "./Admin/pages/DashboardPage";
 import ExperiencePage from "./Admin/pages/ExperiencePage";
+import CertificationsPage from "./Admin/pages/CertificationsPage";
 import LoginPage from "./Admin/pages/LoginPage";
 import MessagesPage from "./Admin/pages/MessagesPage";
 import ProjectsPage from "./Admin/pages/ProjectsPage";
@@ -30,6 +31,7 @@ export default function App() {
             <Route path="/admin/skills" element={<SkillsPage />} />
             <Route path="/admin/projects" element={<ProjectsPage />} />
             <Route path="/admin/experience" element={<ExperiencePage />} />
+            <Route path="/admin/certifications" element={<CertificationsPage />} />
             <Route path="/admin/blogs" element={<BlogsPage />} />
             <Route path="/admin/messages" element={<MessagesPage />} />
             <Route path="/admin/settings" element={<SettingsPage />} />
