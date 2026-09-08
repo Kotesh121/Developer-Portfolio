@@ -11,7 +11,7 @@ import {
 
 function newId() {
   return `blog-${generateUUID().slice(0, 8)}`;
-}i
+}
 
 export default function BlogsPage() {
   const { portfolio, loading, saving, setPortfolio, save, isSaving, cardStatus } =
