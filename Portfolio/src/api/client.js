@@ -77,14 +77,12 @@ export async function uploadResume(dataUrl, filename) {
 
 /** Login — saves token and sets cookie for dual cross-origin authentication */
 export async function loginAdmin(email, password) {
-  let deviceId = localStorage.getItem("admin_device_id");
-  if (!deviceId) {
-    deviceId = typeof crypto !== "undefined" && crypto.randomUUID 
-      ? crypto.randomUUID() 
-      : Math.random().toString(36).substring(2) + Date.now().toString(36);
-    localStorage.setItem("admin_device_id", deviceId);
-  }
+ let deviceId = localStorage.getItem("admin_device_id");
 
+if (!deviceId) {
+  deviceId = generateUUID();
+  localStorage.setItem("admin_device_id", deviceId);
+}
   const data = await request("/api/auth/login", {
     method: "POST",
     headers: { "x-device-id": deviceId },

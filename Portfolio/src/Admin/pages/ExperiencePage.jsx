@@ -1,3 +1,4 @@
+import { generateUUID } from "../../utils/uuid";
 import { useRef } from "react";
 import useAdminPortfolio from "../hooks/useAdminPortfolio";
 import {
@@ -10,7 +11,7 @@ import {
 } from "../components/AdminUi";
 
 function newId() {
-  return `exp-${crypto.randomUUID().slice(0, 8)}`;
+  return `exp-${generateUUID().slice(0, 8)}`;
 }
 
 function TagEditor({ tags = [], onChange }) {

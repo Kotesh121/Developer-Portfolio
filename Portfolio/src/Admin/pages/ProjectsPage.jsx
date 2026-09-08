@@ -1,3 +1,4 @@
+import { generateUUID } from "../../utils/uuid";
 import { useState, useRef } from "react";
 import useAdminPortfolio from "../hooks/useAdminPortfolio";
 import { uploadProjectImage } from "../api/client";
@@ -11,7 +12,7 @@ import {
 } from "../components/AdminUi";
 
 function newId() {
-  return `proj-${crypto.randomUUID().slice(0, 8)}`;
+  return `proj-${generateUUID().slice(0, 8)}`;
 }
 
 // ── Tag pill chip editor (ported from AboutPage) ────────────────────────────

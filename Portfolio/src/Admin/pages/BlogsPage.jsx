@@ -1,3 +1,4 @@
+import { generateUUID } from "../../utils/uuid";
 import useAdminPortfolio from "../hooks/useAdminPortfolio";
 import {
   AdminCard,
@@ -9,8 +10,8 @@ import {
 } from "../components/AdminUi";
 
 function newId() {
-  return `blog-${crypto.randomUUID().slice(0, 8)}`;
-}
+  return `blog-${generateUUID().slice(0, 8)}`;
+}i
 
 export default function BlogsPage() {
   const { portfolio, loading, saving, setPortfolio, save, isSaving, cardStatus } =

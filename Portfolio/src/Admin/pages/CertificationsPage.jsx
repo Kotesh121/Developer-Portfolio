@@ -1,3 +1,4 @@
+import { generateUUID } from "../../utils/uuid";
 import { useRef, useState } from "react";
 import useAdminPortfolio from "../hooks/useAdminPortfolio";
 import { uploadCertificationImage } from "../api/client";
@@ -11,7 +12,7 @@ import {
 } from "../components/AdminUi";
 
 function newId() {
-  return `cert-${crypto.randomUUID().slice(0, 8)}`;
+  return `cert-${generateUUID().slice(0, 8)}`;
 }
 
 function CertificationImageInput({ value, onChange, certId }) {

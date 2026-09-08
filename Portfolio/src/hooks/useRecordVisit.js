@@ -1,3 +1,4 @@
+import { generateUUID } from "../utils/uuid";
 import { useEffect } from "react";
 import { recordPortfolioView } from "../api/client";
 
@@ -7,7 +8,7 @@ const SESSION_KEY = "portfolio-visit-recorded";
 function getVisitorId() {
   let id = localStorage.getItem(VISITOR_KEY);
   if (!id) {
-    id = crypto.randomUUID();
+    id = generateUUID();
     localStorage.setItem(VISITOR_KEY, id);
   }
   return id;
